@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>title</title>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js">
+    </script>
+    <script type="text/javascript" src= "https://code.jquery.com/jquery-1.12.0.min.js"></script>
+  </head>
+  <body>
+    <!-- page content -->
+    <canvas id="myChart" style="width:100%;max-width:700px"></canvas>
+    <script>
+      console.log('loading json from url')
+      getData();
+
+      async function getData() {
+          //console.log("start async function getting data from url.")
+          //const response = await fetch('https://datausa.io/api/data?drilldowns=Nation&measures=Population');
+          const response = await fetch('/returnsqljson');
+          //console.log("response:", response);
+          const data = await response.json();
+          //console.log("data:", data);
+          length = data.length;
+          //console.log("data.length:", length);
+          //console.log("data[0].time:", data[0].time);
+          //console.log("data[0].trip_length:", data[0].trip_length);
+          labels = [];
+          values = [];
+          for (i = 0; i < length; i++) {
+              labels.push(data[i].time);
+              values.push(data[i].trip_length);
+          }
+          //console.log("labels:",labels)
+          //console.log("values:",values)
+          //
+          new Chart(document.getElementById("myChart"), {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: "Time of day",
+                            data: values
+                        }
+                    ]
+                },
+                options: {
+                    legend: { display: false },
+                    title: {
+                        display: true,
+                        text: 'Trip Times'
+                    }
+                }
+            });
+        }
+//source chart w static data.
+//https://www.w3schools.com/js/tryit.asp?filename=tryai_chartjs_scatter
+//source chart using async method.
+//https://www.geeksforgeeks.org/create-a-chart-from-json-data-using-fetch-get-request-fetch-api-in-javascript/
+</script>
+
+  </body>
+</html>
